@@ -56,12 +56,12 @@ def ask_local(role, instructions, prompt, model=DEFAULT_MODEL):
     from ollama import chat
 
     is_moderator = role == "Moderator AI"
-    options = {
-        "temperature": (0.35 if is_moderator else 0.7 if role == "Critical AI" else 0.55),
-        "num_ctx": 12288 if is_moderator else 8192,  # Contexto maior na síntese.
-        "num_predict": 2300 if is_moderator else 950,  # Mais texto que os antigos 330.
-        "repeat_penalty": 1.08,
-    }
+    options={
+    "temperature": 0.5,
+    "num_ctx": 8192 if is_moderator else 6144,
+    "num_predict": 1900 if is_moderator else 850,
+},
+keep_alive="10m",
     request = {
         "model": model,
         "messages": [
