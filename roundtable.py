@@ -60,8 +60,7 @@ def ask_local(role, instructions, prompt, model=DEFAULT_MODEL):
     "temperature": 0.5,
     "num_ctx": 8192 if is_moderator else 6144,
     "num_predict": 1900 if is_moderator else 850,
-},
-keep_alive="10m",
+}
     request = {
         "model": model,
         "messages": [
