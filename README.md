@@ -1,53 +1,32 @@
-# 🧠 AI Roundtable — Local Multi-Agent Decision Assistant
+# Távola Redonda IA — V12 (Grounded Debate)
 
-An end-to-end, **free and local** AI project for exploring business decisions through structured debate. Three AI roles produce independent analyses, review each other's arguments, and a moderator synthesizes the results. Optionally, upload a CSV to ground the discussion in descriptive statistics.
+Projeto local e gratuito para debater decisões empresariais com **Qwen3 1.7B + Ollama + Streamlit**.
 
-**No paid API, API key, hosted inference, or cloud account required.** The model runs locally using Ollama.
+## Fluxo (exatamente 7 chamadas)
 
-## What it demonstrates
+1. Strategy AI, Technology AI e Ethical AI apresentam opiniões iniciais (3 chamadas).
+2. Cada agente lê os argumentos dos outros e responde com base nos documentos (3 chamadas).
+3. O moderador recebe o debate e **excertos originais relevantes dos anexos** (1 chamada).
 
-- **AI orchestration:** sequential multi-agent workflows (7 model calls per session)
-- **Prompt engineering:** specialised roles, critique round, evidence-aware synthesis
-- **Business analytics:** CSV inspection, summary statistics and business recommendations
-- **AI observability:** generation times, prompt/output token counts, JSON export
-- **Software engineering:** modular Python code, dependency management and unit tests
+## O que mudou em relação à V11
 
-## Architecture
+- Prompts mais curtos e orientados para **factos, hipóteses e incertezas**.
+- Os agentes têm de fundamentar os argumentos e corrigir afirmações sem suporte na segunda ronda.
+- O moderador recebe excertos selecionados do texto original, não apenas as respostas dos agentes.
+- `evidence_checks.py` valida aritmeticamente **equações explícitas**, como `178.000 € = 1.200 × (850 € − 310 €) − 470.000 €`, através de Python, sem LLM extra.
+- Mantém `.docx`, `.xlsx` (todas as folhas), Qwen3 1.7B e sete chamadas. Sem APIs pagas.
 
-```mermaid
-flowchart TD
-    A[User question + optional CSV] --> B[Pandas data summary]
-    B --> C[Strategy AI]
-    B --> D[Technology AI]
-    B --> E[Critical AI]
-    C --> F[Round 2: cross-review]
-    D --> F
-    E --> F
-    F --> G[Moderator AI]
-    G --> H[Streamlit report + metrics]
-    H --> I[Markdown / JSON exports]
-```
+**Limites:** o Python não constrói modelos financeiros automaticamente a partir de prosa livre, não recalcula fórmulas do Excel e não verifica todos os factos. Os excertos fornecidos ao moderador podem omitir detalhes de documentos grandes; os três agentes recebem o conteúdo integral que cabe no limite de upload já definido. Mesmo com estas alterações, o LLM pode continuar a cometer erros. Para análises críticas, valida os cálculos e as recomendações.
 
-All model inference is made locally with `ollama.chat()`; all agents share the same local model, with different system instructions. Agents are not independent neural networks.
+## Instalação (Windows / VS Code)
 
-## Requirements
-
-- Windows 10/11 (or another Ollama-supported OS)
-- Python 3.11–3.15 (Python 3.12 is a good choice)
-- Ollama (https://ollama.com/download)
-- Suggested: 16 GB RAM and available storage space
-- A local model: `qwen3:4b-instruct` (~2.5 GB download)
-
-## Quick start (Windows PowerShell in VS Code)
-
-1. Install Python and Ollama.
-2. Download the local model:
+Instala o [Ollama](https://ollama.com/download) e executa uma vez:
 
 ```powershell
-ollama pull qwen3:4b-instruct
+ollama pull qwen3:1.7b
 ```
 
-3. Open this folder in VS Code and run:
+Na pasta do projeto:
 
 ```powershell
 py -m venv .venv
@@ -55,40 +34,31 @@ py -m venv .venv
 .\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-4. Open the local URL shown in the terminal (typically http://localhost:8501).
-5. Ask a business question. Try uploading `dados/exemplo_vendas.csv`.
+Para quem já tem a V11 instalada, basta substituir `roundtable.py` e adicionar `evidence_checks.py`, sem reinstalar bibliotecas. Os restantes ficheiros permanecem iguais.
 
-If the machine is slow, download `ollama pull qwen2.5:1.5b-instruct` and select it from the Streamlit sidebar. Smaller models generally produce less reliable answers.
-
-## Testing
+## Testes
 
 ```powershell
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-The unit tests mock model calls; they run without a running Ollama server.
+O teste automático substitui o modelo por respostas simuladas; **não** mede a qualidade das respostas geradas no teu computador.
 
-## Repo structure
+## Próximo teste recomendado
 
-- `app.py` — Streamlit interface, metrics, downloads
-- `roundtable.py` — agent definitions, Ollama calls, debate rounds
-- `data_utils.py` — CSV statistics and evidence context
-- `dados/exemplo_vendas.csv` — synthetic demo data, not real company data
-- `tests/test_roundtable.py` — deterministic unit tests
-- `GUIA_PT.md` — full Portuguese setup guide
+Carrega `Caso_Atelier_Norte_AI_Roundtable.docx` (o ficheiro de caso que já tens) e pergunta:
 
-## Limitations
+> Compara A, B e C usando os valores financeiros do documento. Explica quais dependem de vendas ainda não confirmadas e se a opção B é recomendável já ou apenas de forma faseada. Não inventes reduções na taxa de defeitos.
 
-- Agreement between AI agents is **not evidence of correctness**.
-- Using distinct prompts with the same model does not guarantee independent views.
-- CSV integration provides summaries and a small sample, **not** an exhaustive analysis of every row.
-- Small local models can hallucinate; verify critical business claims against evidence.
-- This local demo is not an always-on cloud-hosted website; GitHub hosts the code, not the running Ollama service.
+Compara a V11 e a V12 com a **mesma pergunta e o mesmo documento**. Observa se há mais valores reais, menos afirmações inventadas e uma comparação mais equilibrada das alternativas.
 
-## Next ideas
+## Git
 
-Introduce evidence retrieval and citations (RAG), compare model families, evaluate outputs against labelled cases, add safety checks, and support more structured data analysis.
+Recomenda-se experimentar numa branch própria antes de fazer merge na `main`.
 
-## External libraries and models
-
-Dependencies and the selected model have their own licenses; verify these before distributing model weights or using the project commercially. Model weights are **not included** in this repository.
+```powershell
+git switch -c feature/grounded-debate
+git add -A
+git commit -m "Improve evidence-based agent debate"
+git push -u origin feature/grounded-debate
+```
