@@ -1,32 +1,27 @@
-# Távola Redonda IA — V12 (Grounded Debate)
+# Távola Redonda IA
 
-Projeto local e gratuito para debater decisões empresariais com **Qwen3 1.7B + Ollama + Streamlit**.
+Uma aplicação **gratuita e local** que utiliza inteligência artificial para analisar questões e debater diferentes perspetivas. Desenvolvida com **Python, Streamlit, Ollama e Qwen3 1.7B**.
 
-## Fluxo (exatamente 7 chamadas)
+## Como funciona
 
-1. Strategy AI, Technology AI e Ethical AI apresentam opiniões iniciais (3 chamadas).
-2. Cada agente lê os argumentos dos outros e responde com base nos documentos (3 chamadas).
-3. O moderador recebe o debate e **excertos originais relevantes dos anexos** (1 chamada).
+1. O utilizador escreve uma pergunta e, se quiser, anexa ficheiros **Word (.docx)** ou **Excel (.xlsx)**.
+2. Três agentes analisam o problema: **Strategy AI** (negócio), **Technology AI** (viabilidade) e **Ethical AI** (ética).
+3. Os agentes apresentam as suas opiniões e, numa segunda ronda, respondem aos argumentos uns dos outros.
+4. Um moderador reúne os principais pontos e apresenta uma conclusão.
 
-## O que mudou em relação à V11
+O debate tem **7 chamadas ao modelo**: 3 análises iniciais, 3 respostas na segunda ronda e 1 síntese final.
 
-- Prompts mais curtos e orientados para **factos, hipóteses e incertezas**.
-- Os agentes têm de fundamentar os argumentos e corrigir afirmações sem suporte na segunda ronda.
-- O moderador recebe excertos selecionados do texto original, não apenas as respostas dos agentes.
-- `evidence_checks.py` valida aritmeticamente **equações explícitas**, como `178.000 € = 1.200 × (850 € − 310 €) − 470.000 €`, através de Python, sem LLM extra.
-- Mantém `.docx`, `.xlsx` (todas as folhas), Qwen3 1.7B e sete chamadas. Sem APIs pagas.
+## Instalação
 
-**Limites:** o Python não constrói modelos financeiros automaticamente a partir de prosa livre, não recalcula fórmulas do Excel e não verifica todos os factos. Os excertos fornecidos ao moderador podem omitir detalhes de documentos grandes; os três agentes recebem o conteúdo integral que cabe no limite de upload já definido. Mesmo com estas alterações, o LLM pode continuar a cometer erros. Para análises críticas, valida os cálculos e as recomendações.
+É necessário ter **Python** e [Ollama](https://ollama.com/download) instalados.
 
-## Instalação (Windows / VS Code)
-
-Instala o [Ollama](https://ollama.com/download) e executa uma vez:
+Descarrega o modelo gratuito:
 
 ```powershell
 ollama pull qwen3:1.7b
 ```
 
-Na pasta do projeto:
+Na pasta do projeto, executa:
 
 ```powershell
 py -m venv .venv
@@ -34,31 +29,20 @@ py -m venv .venv
 .\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-Para quem já tem a V11 instalada, basta substituir `roundtable.py` e adicionar `evidence_checks.py`, sem reinstalar bibliotecas. Os restantes ficheiros permanecem iguais.
+A aplicação abre no browser. O modelo corre no teu computador, sem necessidade de API paga.
 
-## Testes
+## Exemplo de utilização
 
-```powershell
-.\.venv\Scripts\python.exe -m unittest discover -s tests -v
-```
+Anexa um relatório empresarial e pergunta:
 
-O teste automático substitui o modelo por respostas simuladas; **não** mede a qualidade das respostas geradas no teu computador.
+> Qual é a melhor estratégia para aumentar as vendas sem comprometer a qualidade? Analisa os dados fornecidos e identifica os principais riscos.
 
-## Próximo teste recomendado
+## Notas
 
-Carrega `Caso_Atelier_Norte_AI_Roundtable.docx` (o ficheiro de caso que já tens) e pergunta:
+- Os ficheiros Excel podem conter várias folhas.
+- Documentos grandes estão sujeitos a limites de tamanho e contexto do modelo.
+- As respostas da IA podem conter erros; confirma os dados e os cálculos antes de tomar decisões.
 
-> Compara A, B e C usando os valores financeiros do documento. Explica quais dependem de vendas ainda não confirmadas e se a opção B é recomendável já ou apenas de forma faseada. Não inventes reduções na taxa de defeitos.
+## Tecnologias
 
-Compara a V11 e a V12 com a **mesma pergunta e o mesmo documento**. Observa se há mais valores reais, menos afirmações inventadas e uma comparação mais equilibrada das alternativas.
-
-## Git
-
-Recomenda-se experimentar numa branch própria antes de fazer merge na `main`.
-
-```powershell
-git switch -c feature/grounded-debate
-git add -A
-git commit -m "Improve evidence-based agent debate"
-git push -u origin feature/grounded-debate
-```
+**Python · Streamlit · Ollama · Qwen3 1.7B**

@@ -1,9 +1,4 @@
-"""Lightweight, deterministic evidence helpers. No AI/API calls.
 
-These checks do NOT infer financial models from prose or Excel formulas.
-They can only validate arithmetic expressions written explicitly as
-"number = arithmetic expression" and select original evidence lines.
-"""
 from __future__ import annotations
 
 import ast
@@ -24,7 +19,7 @@ _STOPWORDS = {"para", "como", "com", "uma", "que", "qual", "das", "dos", "por", 
 
 
 def _normalize_num(match: re.Match[str]) -> str:
-    """Convert European 1.200 and 1.200,50 into Python-friendly numerals."""
+    
     return match.group(0).replace(".", "").replace(",", ".")
 
 
@@ -60,11 +55,7 @@ def _safe_math(expression: str) -> Decimal:
 
 
 def verify_explicit_equations(evidence: str, max_checks: int = 5) -> str:
-    """Check only explicit arithmetic with a stated expected number.
-
-    For example: '178.000 € = 1.200 × (850 € − 310 €) − 470.000 €'.
-    Does not evaluate Excel cell formulas or model unstructured business data.
-    """
+    
     verified = []
     for line in evidence.splitlines():
         if "=" not in line or len(line) > 400:
@@ -95,11 +86,7 @@ def _normalize_words(value: str) -> set[str]:
 
 
 def select_relevant_evidence(evidence: str, question: str, max_chars: int = 2500) -> str:
-    """Choose unmodified evidence lines for the moderator's limited context.
-
-    The first six calls receive the full extracted content. Moderator gets
-    relevant source excerpts as a cross-check, not a claim of full re-reading.
-    """
+    
     if not evidence.strip():
         return ""
     if len(evidence) <= max_chars:

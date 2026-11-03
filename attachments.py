@@ -1,8 +1,4 @@
-"""Extract readable text from Word (.docx) and Excel (.xlsx) files.
 
-The full extractable text is included or the upload is rejected: never silently
-truncate documents to make them fit in an LLM context window.
-"""
 from __future__ import annotations
 
 from io import BytesIO
@@ -20,7 +16,7 @@ MAX_EXTRACTED_CHARS = 13_000
 
 
 def extract_word(content: bytes) -> str:
-    """Read paragraphs, tables, headers and footers from a DOCX file."""
+    
     document = Document(BytesIO(content))
     lines: list[str] = []
     for block in document.iter_inner_content():
@@ -48,11 +44,7 @@ def extract_word(content: bytes) -> str:
 
 
 def extract_excel(content: bytes) -> str:
-    """Read ALL sheets and non-empty cells, including formulas when present.
-
-    Cached formula values are included when the Excel file contains them.
-    Excel charts, images and formatting are not interpreted.
-    """
+    
     formulas = load_workbook(BytesIO(content), read_only=True, data_only=False)
     cached = load_workbook(BytesIO(content), read_only=True, data_only=True)
     try:
@@ -83,7 +75,7 @@ def extract_excel(content: bytes) -> str:
 
 
 def build_evidence(files: list[tuple[str, bytes]]) -> str:
-    """Create one evidence string for the debate, keeping EVERY extracted cell/line."""
+    
     if len(files) > MAX_FILES:
         raise ValueError(f"Podes anexar no máximo {MAX_FILES} ficheiros por debate.")
     extracted: list[str] = []

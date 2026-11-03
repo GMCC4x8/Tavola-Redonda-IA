@@ -1,8 +1,4 @@
-"""Seven-call grounded AI debate using a small, fully local Qwen3 model.
 
-3 independent opening positions -> 3 evidence-based rebuttals -> 1 moderator.
-Python evidence checks add NO additional LLM calls.
-"""
 from __future__ import annotations
 
 from evidence_checks import select_relevant_evidence, verify_explicit_equations
@@ -34,7 +30,7 @@ SYSTEM_RULES = (
 
 
 def ask_ollama(name: str, instructions: str, prompt: str, max_tokens: int) -> str:
-    """Make exactly one local Ollama call (no paid/cloud APIs)."""
+    
     from ollama import chat
 
     # Larger documents need more context. Keep the default small for the user's CPU.
@@ -56,7 +52,7 @@ def ask_ollama(name: str, instructions: str, prompt: str, max_tokens: int) -> st
 
 
 def run_debate(question: str, evidence: str = "", ask_fn=None, on_progress=None) -> dict:
-    """Return one seven-call debate. ask_fn allows tests without Ollama."""
+    
     question = question.strip()
     if not question:
         raise ValueError("Escreve uma pergunta para iniciar o debate.")

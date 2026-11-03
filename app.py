@@ -1,4 +1,4 @@
-"""Minimal Streamlit UI: question, Word/Excel attachments, seven-call debate."""
+
 import streamlit as st
 
 from attachments import build_evidence
