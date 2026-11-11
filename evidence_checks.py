@@ -102,7 +102,7 @@ def select_relevant_evidence(evidence: str, question: str, max_chars: int = 2500
         score += 2 if any(s in line.lower() for s in ("opção", "opcao", "option", "resultado", "lucro", "investimento", "preço", "custos")) else 0
         score += 9 if re.match(r"^(opção|opcao|option)\s+[a-z]", line, re.IGNORECASE) else 0
         ranking.append((score, idx, line))
-    # Avoid cutting lines halfway: only include whole lines that fit.
+    
     ranking.sort(key=lambda x: (-x[0], x[1]))
     selected = []
     used = 0

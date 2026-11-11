@@ -52,8 +52,7 @@ def extract_excel(content: bytes) -> str:
         for sheet in formulas:
             values = cached[sheet.title]
             lines.append(f"[FOLHA: {sheet.title}]")
-            # zip allows us to read formula and cached-value views of all rows
-            # without materializing the entire workbook in memory.
+            
             for row_formula, row_value in zip(sheet.iter_rows(), values.iter_rows()):
                 items = []
                 for cell, value in zip(row_formula, row_value):
