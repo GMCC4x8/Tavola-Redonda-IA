@@ -1,6 +1,36 @@
+# Ambiente virtual
 .venv/
+venv/
+env/
+
+# Cache Python
 __pycache__/
 *.py[cod]
-.env
-.streamlit/secrets.toml
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Variáveis de ambiente e segredos
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+*.key
+*.pem
+
+# Ficheiros temporários
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Ficheiros temporários Python
+*.egg-info/
+build/
+dist/
+
+# Cache Streamlit
+.streamlit/cache/
